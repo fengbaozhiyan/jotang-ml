@@ -30,40 +30,38 @@
 ## 3. 数据、特征、标签；训练集、验证集、测试集
 ### 基础概念
 1. **数据**：原始全部材料，比如一堆图片、表格记录。
-2. **特征(fe\(\boldsymbol a\)ture)**：用来描述样本的信息，模型的输入。例如房价预测：面积、楼层、房龄都是特征。
-3. **标签(l\(\boldsymbol a\)\(\boldsymbol b\)el)**：样本的“标准答案”，监督学习的预测目标。例如房价的真实价格；图片是猫还是狗。
+2. **特征(feature)**：用来描述样本的信息，模型的输入。例如房价预测：面积、楼层、房龄都是特征。
+3. **标签(label)**：样本的“标准答案”，监督学习的预测目标。例如房价的真实价格；图片是猫还是狗。
 
 ### 数据集划分
-1. **训练集(Tr\(\boldsymbol a\)in set)**：占绝大部分数据，**用来训练模型，更新参数**。模型在这里看大量样本学习规律。
-2. **验证集(V\(\boldsymbol a\)lid\(\boldsymbol a\)tion set)**：训练过程中间使用。用来调超参数（\(\boldsymbol b\)\(\boldsymbol a\)tch si\(\boldsymbol z\)e、学习率），选择最好的模型，观察训练时的泛化能力。**不参与参数更新**。
+1. **训练集(Train set)**：占绝大部分数据，**用来训练模型，更新参数**。模型在这里看大量样本学习规律。
+2. **验证集(Validation set)**：训练过程中间使用。用来调超参数（batch size、学习率），选择最好的模型，观察训练时的泛化能力。**不参与参数更新**。
 3. **测试集(Test set)**：**全程训练中不能碰，最后才使用**。模拟真实世界新数据，评估模型最终真实性能，作为模型上线前的最终打分。
 
 > 注意：绝对不能拿测试集调参，会造成信息泄露，评估结果虚假偏高。
 
 ---
 
-## 4. \(\boldsymbol b\)\(\boldsymbol a\)tch si\(\boldsymbol z\)e 是什么？有什么影响
+## 4. batch size 是什么？有什么影响
 > 深度学习不会把全部数据一次性丢进网络，会把训练集切分成很多小批次。
-**\(\boldsymbol b\)\(\boldsymbol a\)tch si\(\boldsymbol z\)e：一个批次里面样本的数量。每训练一个\(\boldsymbol b\)\(\boldsymbol a\)tch，更新一次模型参数。**
+**batch size：一个批次里面样本的数量。每训练一个batch，更新一次模型参数。**
 
 ### 影响
-1. **显存/内存**：\(\boldsymbol b\)\(\boldsymbol a\)tch越大，一次加载样本越多，显存占用越高；硬件不足会报OOM显存溢出。
-2. **梯度稳定性**：大\(\boldsymbol b\)\(\boldsymbol a\)tch，梯度计算更稳定、噪声更小；小\(\boldsymbol b\)\(\boldsymbol a\)tch梯度噪声大，可以帮助跳出局部最低点。
-3. **训练速度**：大\(\boldsymbol b\)\(\boldsymbol a\)tch硬件并行利用率高，迭代一轮epoch速度快；小\(\boldsymbol b\)\(\boldsymbol a\)tch单步快，但一轮要迭代更多次。
-4. **泛化能力**：过小的\(\boldsymbol b\)\(\boldsymbol a\)tch噪声太大收敛难；过大\(\boldsymbol b\)\(\boldsymbol a\)tch容易陷入局部最优，泛化下降。
+1. **显存/内存**：batch越大，一次加载样本越多，显存占用越高；硬件不足会报OOM显存溢出。
+2. **梯度稳定性**：大batch，梯度计算更稳定、噪声更小；小batch梯度噪声大，可以帮助跳出局部最低点。
+3. **训练速度**：大batch硬件并行利用率高，迭代一轮epoch速度快；小batch单步快，但一轮要迭代更多次。
+4. **泛化能力**：过小的batch噪声太大收敛难；过大batch容易陷入局部最优，泛化下降。
 
 > epoch：把整个训练集全部过一遍，叫一个epoch。
-> 总迭代步数 = 样本总数 / \(\boldsymbol b\)\(\boldsymbol a\)tch si\(\boldsymbol z\)e
+> 总迭代步数 = 样本总数 / batch size
 
 ---
 
 ## 5. 模型和模型参数
 - **模型**：一套数学结构，用来接收输入，输出预测结果。例如全连接神经网络就是一个模型。
-- **模型参数(权重w、偏置\(\boldsymbol b\))**：模型里面可以被学习、被更新的数字。
+- **模型参数(权重w、偏置b**：模型里面可以被学习、被更新的数字。
 > 训练本质：不断调整这些参数，让模型预测越来越接近真实标签。
-> 对比：**超参数**是人为预先设置的，训练不自动更新，如\(\boldsymbol b\)\(\boldsymbol a\)tch‑si\(\boldsymbol z\)e、学习率、网络层数。
-
-举例子：$y=w*\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol x\)+\(\boldsymbol b\)$，$\(w,\(\boldsymbol b\)\)$就是模型参数；学习率是超参数。
+> 对比：**超参数**是人为预先设置的，训练不自动更新，如batch‑size、学习率、网络层数。
 
 ---
 
@@ -80,15 +78,15 @@
 **激活函数给网络引入非线性，让神经网络可以拟合任意复杂函数。**
 
 ### 常见激活函数
-1. **Sigmoid**：$\sigm\(\boldsymbol a\)(\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol x\))=\dfr\(\boldsymbol a\)c{1}{1+e^{-\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol x\)}}$
+1. **Sigmoid**：
     - 输出(0,1)，适合二分类输出层；
     - 缺点：容易梯度消失，输出不是0均值。
-2. **T\(\boldsymbol a\)nh**：$\\(\t\(\boldsymbol a\)nh(\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol x\))\)$，输出$(-1,1)$，0均值，但依然存在梯度消失。
-3. **ReLU**：$\te\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol x\)t{ReLU}(\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol x\))=\m\(\boldsymbol a\)\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol x\)(0,\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol x\))$，最常用隐藏层激活
+2. **Tanh**：输出(-1,1)，0均值，但依然存在梯度消失。
+3. **ReLU**：最常用隐藏层激活
     - 计算快，正区间不会梯度消失；
     - 问题：死亡ReLU，负数输入输出为0，部分神经元永远不激活。
-4. **Le\(\boldsymbol a\)ky ReLU**：负数部分保留很小斜率，解决死亡ReLU。
-5. **Softm\(\boldsymbol a\)\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol x\)**：多用于多分类输出层，把输出转为概率，所有输出和为1。
+4. **Leaky ReLU**：负数部分保留很小斜率，解决死亡ReLU。
+5. **Softmax**：多用于多分类输出层，把输出转为概率，所有输出和为1。
 
 ---
 
@@ -101,40 +99,23 @@
 
 > 重点：深度学习框架(PyTorch/Tensorflow)自动求导，不需要手动手算巨量矩阵导数；但是要理解概念：梯度就是损失对参数的偏导数，代表参数往哪个方向调整可以降低损失。
 
-> 例子：$\(L(y)\)$损失，$\(y=\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol W\)\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol x\)+\(\boldsymbol b\)\)$，求$\dfr\(\boldsymbol a\)c{\p\(\boldsymbol a\)rti\(\boldsymbol a\)l L}{\p\(\boldsymbol a\)rti\(\boldsymbol a\)l \(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol W\)}$，就是矩阵求导。
-
 ---
 
 ## 8. 矩阵乘法表示全连接层前向传播
 设：
-- 输入向量：$\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol \(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol x\)$ (n维，n是上一层神经元数量)
-- 权重矩阵：$\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol \(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol W\)$ 形状 $[输出神经元数,输入神经元数]$
-- 偏置向量：$\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol \(\boldsymbol b\)$
-- 激活函数：$\sigm\(\boldsymbol a\)$
+- 输入向量：x(n维，n是上一层神经元数量)
+- 权重矩阵：W形状 [输出神经元数,输入神经元数]
+- 偏置向量：b
+- 激活函数：\(\sigma\)
 
-单样本全连接层：
-$$
-\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol \(\boldsymbol z\) = \\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol \(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol W\) \\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol \(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol x\) + \\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol \(\boldsymbol b\)
-$$
-$$
-\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol \(\boldsymbol a\) = \sigm\(\boldsymbol a\)(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol \(\boldsymbol z\))
-$$
-$\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol \(\boldsymbol z\)$：加权和；$\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol \(\boldsymbol a\)$：经过激活之后本层输出，送给下一层。
-
-**批量矩阵形式（\(\boldsymbol b\)\(\boldsymbol a\)tch输入）**
-$X$ 维度 $[\(\boldsymbol b\)\(\boldsymbol a\)tch\_si\(\boldsymbol z\)e,\ input\_dim]$，把一个\(\boldsymbol b\)\(\boldsymbol a\)tch全部样本写成矩阵，一次性计算：
-$$
-Z = X \(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol W\)^T + B
-$$
-$$
-A=\sigm\(\boldsymbol a\)(Z)
-$$
+**批量矩阵形式（batch输入）**
+X维度把一个batch全部样本写成矩阵，一次性计算。
 > 矩阵批量运算，充分利用GPU并行加速，这就是框架底层做的事情。
 
 ---
 
 ## 9. 前向传播、反向传播；损失函数、梯度、学习率
-### 前向传播Forw\(\boldsymbol a\)rd
+### 前向传播Forward
 数据从输入层，一层一层做矩阵运算+激活，一直计算得到模型预测输出。
 > 作用：拿到预测值，计算损失。**只做计算，不修改参数。**
 
@@ -142,36 +123,32 @@ $$
 衡量**模型预测结果和真实标签差距有多大**。
 预测和真实差距越大，损失数值越大。如MSE均方误差、交叉熵损失。
 
-### 反向传播B\(\boldsymbol a\)ckw\(\boldsymbol a\)rd Prop\(\boldsymbol a\)g\(\boldsymbol a\)tion
+### 反向传播Backward Propagation
 从损失函数开始，使用链式求导，**从输出层往输入层回传，计算损失对每一层权重、偏置的梯度**。
-> 得到每个参数的梯度：$\dfr\(\boldsymbol a\)c{\p\(\boldsymbol a\)rti\(\boldsymbol a\)l L}{\p\(\boldsymbol a\)rti\(\boldsymbol a\)l \(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol W\)},\dfr\(\boldsymbol a\)c{\p\(\boldsymbol a\)rti\(\boldsymbol a\)l L}{\p\(\boldsymbol a\)rti\(\boldsymbol a\)l \(\boldsymbol b\)}$，告诉我们参数朝哪个方向改，损失会变小。
+> 得到每个参数的梯度，告诉我们参数朝哪个方向改，损失会变小。
 
-### 梯度Gr\(\boldsymbol a\)dient
+### 梯度Gradient
 损失对参数的偏导数向量；梯度方向是损失上升方向；**负梯度方向就是损失下降方向**。
 
-### 学习率le\(\boldsymbol a\)rning r\(\boldsymbol a\)te
+### 学习率learning rate
 控制每一步参数更新走多大步子。
-$$
-\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol W\)_{new}=\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol W\)_{old}-\et\(\boldsymbol a\) \cdot \n\(\boldsymbol a\)\(\boldsymbol b\)l\(\boldsymbol a\)_\(\\(\boldsymbol b\)oldsym\(\boldsymbol b\)ol W\) L
-$$
-$\et\(\boldsymbol a\)$就是学习率。
 - 学习率太大：震荡，不收敛，损失来回跳；
 - 学习率太小：训练极慢，容易困在局部最低点。
 
 > 完整训练一轮逻辑：
-> 1.前向传播得到预测 →2.计算损失 →3.反向传播求各参数梯度 →4.用优化器结合梯度、学习率更新权重。循环直到收敛。
+> 1.前向传播得到预测 2.计算损失 3.反向传播求各参数梯度 4.用优化器结合梯度、学习率更新权重。循环直到收敛。
 
 ---
 
 ## 10. 优化器是什么？有哪些
 > **优化器：根据梯度，负责更新模型参数的算法。** 核心目标：尽可能快速降低损失函数。
 
-1. **SGD随机梯度下降**：基础版本，使用\(\boldsymbol b\)\(\boldsymbol a\)tch的梯度直接更新；容易震荡，收敛慢。
+1. **SGD随机梯度下降**：基础版本，使用batch的梯度直接更新；容易震荡，收敛慢。
 2. **SGD + Momentum动量**：积累历史梯度，减少震荡，加速收敛，冲过局部坑。
 3. **RMSprop**：对每个参数自适应学习率，缩放梯度。
-4. **Ad\(\boldsymbol a\)m**：最常用，结合动量 + RMSprop，自适应每个参数学习率，大多数任务首选。
+4. **Adam**：最常用，结合动量 + RMSprop，自适应每个参数学习率，大多数任务首选。
 
-> 超参数：优化器内部也有超参数，如Ad\(\boldsymbol a\)m的\(\boldsymbol b\)et\(\boldsymbol a\)1、\(\boldsymbol b\)et\(\boldsymbol a\)2。
+> 超参数：优化器内部也有超参数，如Adam的beta1、beta2。
 
 ---
 
@@ -186,13 +163,13 @@ $\et\(\boldsymbol a\)$就是学习率。
 **训练集loss很低，准确率很高；但是验证集、测试集效果很差，泛化能力差，遇到新样本表现糟糕。**
 原因：模型太复杂；训练数据太少。
 
-### 正则化 Regul\(\boldsymbol a\)ri\(\boldsymbol z\)\(\boldsymbol a\)tion
+### 正则化 Regularization
 **一组用来抑制过拟合、提升泛化能力的技术，不要让参数过分变大。**
 
 常用正则化手段：
-1. **L1、L2正则**：损失函数增加权重惩罚项，让权重不要变得过大；L2也叫权重衰减weight dec\(\boldsymbol a\)y。
+1. **L1、L2正则**：损失函数增加权重惩罚项，让权重不要变得过大；L2也叫权重衰减weight decay。
 2. **Dropout**：训练时随机把一部分神经元置0，阻止神经元过度互相依赖。
-3. **早停E\(\boldsymbol a\)rly stopping**：监控验证集指标，当验证集性能不再提升，提前终止训练，防止继续训练造成过拟合。
+3. **早停Early stopping**：监控验证集指标，当验证集性能不再提升，提前终止训练，防止继续训练造成过拟合。
 4. **数据增强**：训练数据做变换，扩充样本，减少过拟合（图像翻转裁剪等）。
 
 > 通俗理解：
